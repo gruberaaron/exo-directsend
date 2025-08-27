@@ -60,7 +60,7 @@ function Show-InboundConnectors {
     Pause
 }
 
-function Create-InboundConnector {
+function New-Connector {
     $name = Read-Host "Enter connector name"
     $types = @("Partner", "OnPremises")
     Write-Host "Select connector type:"
@@ -116,7 +116,7 @@ do {
         '3' { Disable-DirectSend }
         '4' { Send-TestDirectSend }
         '5' { Show-InboundConnectors }
-        '6' { Create-InboundConnector }
+        '6' { New-Connector }
         '7' { Add-KnowBe4Connector }
         '8' { Add-SecurenceConnector }
         '9' { Write-Host "Exiting..."; exit }
