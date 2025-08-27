@@ -55,12 +55,12 @@ function Send-TestDirectSend {
     Pause
 }
 
-function Get-Connectors {
+function Show-InboundConnectors {
     Get-InboundConnector | Format-Table -Property Name,Enabled,ConnectorType,SenderIPAddresses,RequireTls
     Pause
 }
 
-function New-InboundConnector {
+function Create-InboundConnector {
     $name = Read-Host "Enter connector name"
     $types = @("Partner", "OnPremises")
     Write-Host "Select connector type:"
@@ -115,8 +115,8 @@ do {
         '2' { Show-RejectDirectSend }
         '3' { Disable-DirectSend }
         '4' { Send-TestDirectSend }
-        '5' { Get-Connectors }
-        '6' { New-InboundConnector }
+        '5' { Show-InboundConnectors }
+        '6' { Create-InboundConnector }
         '7' { Add-KnowBe4Connector }
         '8' { Add-SecurenceConnector }
         '9' { Write-Host "Exiting..."; exit }
