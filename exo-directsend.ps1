@@ -1,5 +1,24 @@
 # exo-directsend.ps1
 
+
+# Check if ExchangeOnlineManagement module is installed
+if (-not (Get-Module -ListAvailable -Name ExchangeOnlineManagement)) {
+    Write-Host "The ExchangeOnlineManagement module is not installed." -ForegroundColor Yellow
+    $install = Read-Host "Do you want to install it now? (y/n)"
+    if ($install -eq 'y') {
+        try {
+            Install-Module -Name ExchangeOnlineManagement -Scope CurrentUser -Force -AllowClobber
+            Write-Host "Module installed successfully."
+        } catch {
+            Write-Host "Failed to install module: $_" -ForegroundColor Red
+            exit 1
+        }
+    } else {
+        Write-Host "Script cannot continue without ExchangeOnlineManagement. Exiting..." -ForegroundColor Red
+        exit 1
+    }
+}
+
 Import-Module ExchangeOnlineManagement -ErrorAction Stop
 
 function Show-Menu {
