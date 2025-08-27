@@ -37,7 +37,7 @@ function Connect-ExchangeOnlineSession {
     }
     try {
         Import-Module ExchangeOnlineManagement -ErrorAction Stop
-        Connect-ExchangeOnline | Out-Null
+        Connect-ExchangeOnline
         Write-Host "Connected to Exchange Online."
     } catch {
         Write-Host "Failed to connect to Exchange Online: $_" -ForegroundColor Red
