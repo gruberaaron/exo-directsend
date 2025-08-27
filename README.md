@@ -49,4 +49,4 @@ This repository contains PowerShell scripts to help manage Exchange Online direc
 
 ## License
 
-This repository is licensed under the MIT License. See the `LICENSE` file for details.
+This repository is licensed under the BSD 3-Clause License. See the `LICENSE` file for details.
