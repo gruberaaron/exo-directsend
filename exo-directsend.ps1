@@ -35,9 +35,10 @@ function Connect-ExchangeOnlineSession {
             return
         }
     }
+    Write-Host "WARNING: You must use a Global Admin account from the target Microsoft 365 tenant to connect." -ForegroundColor Yellow
     try {
         Import-Module ExchangeOnlineManagement -ErrorAction Stop
-        Connect-ExchangeOnline
+        Connect-ExchangeOnline 6>$null
         Write-Host "Connected to Exchange Online."
     } catch {
         Write-Host "Failed to connect to Exchange Online: $_" -ForegroundColor Red
