@@ -1,25 +1,7 @@
 # exo-directsend.ps1
 
 
-# Check if ExchangeOnlineManagement module is installed
-if (-not (Get-Module -ListAvailable -Name ExchangeOnlineManagement)) {
-    Write-Host "The ExchangeOnlineManagement module is not installed." -ForegroundColor Yellow
-    $install = Read-Host "Do you want to install it now? (y/n)"
-    if ($install -eq 'y') {
-        try {
-            Install-Module -Name ExchangeOnlineManagement -Scope CurrentUser -Force -AllowClobber
-            Write-Host "Module installed successfully."
-        } catch {
-            Write-Host "Failed to install module: $_" -ForegroundColor Red
-            exit 1
-        }
-    } else {
-        Write-Host "Script cannot continue without ExchangeOnlineManagement. Exiting..." -ForegroundColor Red
-        exit 1
-    }
-}
-
-Import-Module ExchangeOnlineManagement -ErrorAction Stop
+Import-Module ExchangeOnlineManagement -ErrorAction SilentlyContinue
 
 function Show-Menu {
     Clear-Host
@@ -36,7 +18,30 @@ function Show-Menu {
 }
 
 function Connect-ExchangeOnlineSession {
-    Connect-ExchangeOnline
+    # Check if ExchangeOnlineManagement module is installed
+    if (-not (Get-Module -ListAvailable -Name ExchangeOnlineManagement)) {
+        Write-Host "The ExchangeOnlineManagement module is not installed." -ForegroundColor Yellow
+        $install = Read-Host "Do you want to install it now? (y/n)"
+        if ($install -eq 'y') {
+            try {
+                Install-Module -Name ExchangeOnlineManagement -Scope CurrentUser -Force -AllowClobber
+                Write-Host "Module installed successfully."
+            } catch {
+                Write-Host "Failed to install module: $_" -ForegroundColor Red
+                return
+            }
+        } else {
+            Write-Host "Cannot connect without ExchangeOnlineManagement. Returning to menu..." -ForegroundColor Red
+            return
+        }
+    }
+    try {
+        Import-Module ExchangeOnlineManagement -ErrorAction Stop
+        Connect-ExchangeOnline | Out-Null
+        Write-Host "Connected to Exchange Online."
+    } catch {
+        Write-Host "Failed to connect to Exchange Online: $_" -ForegroundColor Red
+    }
 }
 
 function Show-RejectDirectSend {
@@ -47,8 +52,12 @@ function Show-RejectDirectSend {
 function Disable-DirectSend {
     $confirm = Read-Host "Are you sure you want to disable direct send? (y/n)"
     if ($confirm -eq 'y') {
-        Set-OrganizationConfig -RejectDirectSend $true
-        Write-Host "Direct send has been disabled."
+        try {
+            Set-OrganizationConfig -RejectDirectSend $true
+            Write-Host "Direct send has been disabled."
+        } catch {
+            Write-Host "Failed to disable direct send: $_" -ForegroundColor Red
+        }
     } else {
         Write-Host "Operation cancelled."
     }
@@ -56,6 +65,7 @@ function Disable-DirectSend {
 }
 
 function Send-TestDirectSend {
+    Write-Host "NOTE: Both the sender and recipient email addresses must be valid users within your Microsoft 365 tenant for this test to succeed." -ForegroundColor Yellow
     $mx = Read-Host "Enter recipient domain MX record"
     $from = Read-Host "Enter sender email address"
     $to = Read-Host "Enter recipient email address"
@@ -92,37 +102,51 @@ function New-Connector {
     $tls = Read-Host "Require TLS? (y/n)"
     $enabled = Read-Host "Enable connector? (y/n)"
 
-    New-InboundConnector -Name $name `
-        -ConnectorType $type `
-        -SenderIPAddresses ($ips -split ",") `
-        -RequireTls ($tls -eq 'y') `
-        -Enabled ($enabled -eq 'y')
-
-    Write-Host "Inbound connector created."
+    try {
+        New-InboundConnector -Name $name `
+            -ConnectorType $type `
+            -SenderIPAddresses ($ips -split ",") `
+            -SenderDomains '*' `
+            -RequireTls ($tls -eq 'y') `
+            -Enabled ($enabled -eq 'y') | Out-Null
+        Write-Host "Inbound connector created."
+    } catch {
+        Write-Host "Failed to create inbound connector: $_" -ForegroundColor Red
+    }
     Pause
 }
 
 function Add-KnowBe4Connector {
     $name = "KnowBe4 Inbound"
     $subnet = "147.160.167.0/26"
-    New-InboundConnector -Name $name `
-        -ConnectorType Partner `
-        -SenderIPAddresses $subnet `
-        -RequireTls $true `
-        -Enabled $true
-    Write-Host "KnowBe4 inbound connector created."
+    try {
+        New-InboundConnector -Name $name `
+            -ConnectorType Partner `
+            -SenderIPAddresses $subnet `
+            -SenderDomains '*' `
+            -RequireTls $true `
+            -Enabled $true | Out-Null
+        Write-Host "KnowBe4 inbound connector created."
+    } catch {
+        Write-Host "Failed to create KnowBe4 inbound connector: $_" -ForegroundColor Red
+    }
     Pause
 }
 
 function Add-SecurenceConnector {
     $name = "Securence Inbound"
     $subnet = "216.17.3.0/24"
-    New-InboundConnector -Name $name `
-        -ConnectorType Partner `
-        -SenderIPAddresses $subnet `
-        -RequireTls $true `
-        -Enabled $true
-    Write-Host "Securence inbound connector created."
+    try {
+        New-InboundConnector -Name $name `
+            -ConnectorType Partner `
+            -SenderIPAddresses $subnet `
+            -SenderDomains '*' `
+            -RequireTls $true `
+            -Enabled $true | Out-Null
+        Write-Host "Securence inbound connector created."
+    } catch {
+        Write-Host "Failed to create Securence inbound connector: $_" -ForegroundColor Red
+    }
     Pause
 }
 
