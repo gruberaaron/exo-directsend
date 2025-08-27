@@ -23,9 +23,11 @@ This repository contains PowerShell scripts to help manage Exchange Online direc
    - Open a PowerShell terminal.
    - Navigate to the directory containing the script files.
    - Run the script:
+
      ```powershell
      .\exo-directsend.ps1
      ```
+
    - Follow the on-screen menu prompts.
 
 3. **Important Notes**
