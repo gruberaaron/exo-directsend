@@ -4,8 +4,8 @@ name: Release Please
 
 on:
   push:
-    tags:
-      - 'v*.*.*'
+    branches:
+      - main
 
 
 jobs:
@@ -16,3 +16,4 @@ jobs:
       - uses: googleapis/release-please-action@v4
         with:
           release-type: simple
+          package-name: exo-directsend

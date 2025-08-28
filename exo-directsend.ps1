@@ -23,48 +23,45 @@
 #     Developed by Aaron Gruber. Inspired by Microsoft documentation and community best practices.
 #> Test
 
-$ScriptVersion = '1.0.3'
+$ScriptVersion = '1.0.4'
 
 # --- Version check: compare local script version to latest on GitHub ---
-$githubRawUrl = 'https://raw.githubusercontent.com/gruberaaron/exo-directsend/main/exo-directsend.ps1'
+# Use GitHub API to get the latest release tag
+$githubApiUrl = 'https://api.github.com/repos/gruberaaron/exo-directsend/releases/latest'
 $localScriptPath = $MyInvocation.MyCommand.Path
 
 try {
-    $remoteContent = Invoke-WebRequest -Uri $githubRawUrl -UseBasicParsing | Select-Object -ExpandProperty Content
-    # Extract remote $ScriptVersion assignment (e.g., $ScriptVersion = '1.2.3')
-    $remoteVersionLine = ($remoteContent -split "`n" | Where-Object { $_ -match "^\$ScriptVersion\s*=\s*'([0-9]+\.[0-9]+\.[0-9]+)'" })
-    $remoteVersion = $null
-    if ($remoteVersionLine) {
-        $remoteVersion = ($remoteVersionLine -replace ".*'([0-9]+\.[0-9]+\.[0-9]+)'.*", '$1')
-    }
-    if ($remoteVersion -and ($remoteVersion -ne $ScriptVersion)) {
-        # Compare versions (simple string compare, assumes SemVer)
-        function Compare-Version($v1, $v2) {
-            $a = $v1 -split '\.' | ForEach-Object { [int]$_ }
-            $b = $v2 -split '\.' | ForEach-Object { [int]$_ }
-            for ($i=0; $i -lt 3; $i++) {
-                if ($a[$i] -gt $b[$i]) { return 1 }
-                elseif ($a[$i] -lt $b[$i]) { return -1 }
-            }
-            return 0
+    $headers = @{ 'User-Agent' = 'PowerShell' }
+    $response = Invoke-WebRequest -Uri $githubApiUrl -Headers $headers -UseBasicParsing | ConvertFrom-Json
+    $latestTag = $response.tag_name
+    # Remove leading 'v' if present (e.g., v1.2.3 -> 1.2.3)
+    if ($latestTag -match '^v') { $latestTag = $latestTag.Substring(1) }
+    function Compare-Version($v1, $v2) {
+        $a = $v1 -split '\.' | ForEach-Object { [int]$_ }
+        $b = $v2 -split '\.' | ForEach-Object { [int]$_ }
+        for ($i=0; $i -lt 3; $i++) {
+            if ($a[$i] -gt $b[$i]) { return 1 }
+            elseif ($a[$i] -lt $b[$i]) { return -1 }
         }
-        if ((Compare-Version $remoteVersion $ScriptVersion) -gt 0) {
-            Write-Host "WARNING: A newer version ($remoteVersion) is available on GitHub. You are running $ScriptVersion." -ForegroundColor Yellow
-            $update = Read-Host "Would you like to download and run the latest version now? (y/n)"
-            if ($update -eq 'y') {
-                $tempPath = Join-Path -Path ([System.IO.Path]::GetDirectoryName($localScriptPath)) -ChildPath 'exo-directsend-latest.ps1'
-                try {
-                    Invoke-WebRequest -Uri $githubRawUrl -OutFile $tempPath -UseBasicParsing
-                    Write-Host "Launching the latest version..." -ForegroundColor Green
-                    Start-Process pwsh -ArgumentList "-NoProfile", "-ExecutionPolicy Bypass", "-File", $tempPath
-                    exit
-                } catch {
-                    Write-Host "Failed to download or launch the latest version: $_" -ForegroundColor Red
-                    Read-Host "Press Enter to continue with the current version..."
-                }
-            } else {
+        return 0
+    }
+    if ($latestTag -and (Compare-Version $latestTag $ScriptVersion) -gt 0) {
+        Write-Host "WARNING: A newer version ($latestTag) is available on GitHub. You are running $ScriptVersion." -ForegroundColor Yellow
+        $update = Read-Host "Would you like to download and run the latest version now? (y/n)"
+        if ($update -eq 'y') {
+            $downloadUrl = "https://raw.githubusercontent.com/gruberaaron/exo-directsend/main/exo-directsend.ps1"
+            $tempPath = Join-Path -Path ([System.IO.Path]::GetDirectoryName($localScriptPath)) -ChildPath 'exo-directsend-latest.ps1'
+            try {
+                Invoke-WebRequest -Uri $downloadUrl -OutFile $tempPath -UseBasicParsing
+                Write-Host "Launching the latest version..." -ForegroundColor Green
+                Start-Process pwsh -ArgumentList "-NoProfile", "-ExecutionPolicy Bypass", "-File", $tempPath
+                exit
+            } catch {
+                Write-Host "Failed to download or launch the latest version: $_" -ForegroundColor Red
                 Read-Host "Press Enter to continue with the current version..."
             }
+        } else {
+            Read-Host "Press Enter to continue with the current version..."
         }
     }
 } catch {
