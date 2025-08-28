@@ -8,9 +8,6 @@
 #     Provides a menu-driven interface for managing Exchange Online direct send settings and connectors.
 #     Includes auto-update/version check, auto-connect, and best-practice error handling.
 #
-# .VERSION
-#     1.0.0
-#
 # .AUTHOR
 #     Aaron Gruber
 #
@@ -20,46 +17,58 @@
 # .NOTES
 #     - Requires PowerShell 5.1+ and ExchangeOnlineManagement module.
 #     - No admin rights required for module install (uses -Scope CurrentUser).
-#     - For feedback or contributions, visit: https://github.com/gruberaaron/powershell
+#     - For feedback or contributions, visit: https://github.com/gruberaaron/exo-directsend
 #
 # .CREDITS
 #     Developed by Aaron Gruber. Inspired by Microsoft documentation and community best practices.
 #>
 
-$ScriptVersion = '1.0.0'
+$ScriptVersion = '1.0.1'
 
-# --- Version check: compare local script to latest on GitHub ---
-$githubRawUrl = 'https://raw.githubusercontent.com/gruberaaron/powershell/main/exo-directsend.ps1'
+# --- Version check: compare local script version to latest on GitHub ---
+$githubRawUrl = 'https://raw.githubusercontent.com/gruberaaron/exo-directsend/main/exo-directsend.ps1'
 $localScriptPath = $MyInvocation.MyCommand.Path
 
 try {
-    $localContent = Get-Content -Path $localScriptPath -Raw -Encoding UTF8
     $remoteContent = Invoke-WebRequest -Uri $githubRawUrl -UseBasicParsing | Select-Object -ExpandProperty Content
-    # Normalize line endings to LF and trim trailing whitespace
-    $localContentNorm = ($localContent -replace '\r\n?', "`n") -replace '\s+$',''
-    $remoteContentNorm = ($remoteContent -replace '\r\n?', "`n") -replace '\s+$',''
-    $localHash = [System.BitConverter]::ToString((New-Object -TypeName System.Security.Cryptography.SHA256Managed).ComputeHash([System.Text.Encoding]::UTF8.GetBytes($localContentNorm))).Replace('-','').ToLower()
-    $remoteHash = [System.BitConverter]::ToString((New-Object -TypeName System.Security.Cryptography.SHA256Managed).ComputeHash([System.Text.Encoding]::UTF8.GetBytes($remoteContentNorm))).Replace('-','').ToLower()
-    if ($localHash -ne $remoteHash) {
-        Write-Host "WARNING: This script is not the latest version from GitHub." -ForegroundColor Yellow
-        $update = Read-Host "Would you like to download and run the latest version now? (y/n)"
-        if ($update -eq 'y') {
-            $tempPath = Join-Path -Path ([System.IO.Path]::GetDirectoryName($localScriptPath)) -ChildPath 'exo-directsend-latest.ps1'
-            try {
-                Invoke-WebRequest -Uri $githubRawUrl -OutFile $tempPath -UseBasicParsing
-                Write-Host "Launching the latest version..." -ForegroundColor Green
-                Start-Process pwsh -ArgumentList "-NoProfile", "-ExecutionPolicy Bypass", "-File", $tempPath
-                exit
-            } catch {
-                Write-Host "Failed to download or launch the latest version: $_" -ForegroundColor Red
+    # Extract remote $ScriptVersion assignment (e.g., $ScriptVersion = '1.2.3')
+    $remoteVersionLine = ($remoteContent -split "`n" | Where-Object { $_ -match "^\$ScriptVersion\s*=\s*'([0-9]+\.[0-9]+\.[0-9]+)'" })
+    $remoteVersion = $null
+    if ($remoteVersionLine) {
+        $remoteVersion = ($remoteVersionLine -replace ".*'([0-9]+\.[0-9]+\.[0-9]+)'.*", '$1')
+    }
+    if ($remoteVersion -and ($remoteVersion -ne $ScriptVersion)) {
+        # Compare versions (simple string compare, assumes SemVer)
+        function Compare-Version($v1, $v2) {
+            $a = $v1 -split '\.' | ForEach-Object { [int]$_ }
+            $b = $v2 -split '\.' | ForEach-Object { [int]$_ }
+            for ($i=0; $i -lt 3; $i++) {
+                if ($a[$i] -gt $b[$i]) { return 1 }
+                elseif ($a[$i] -lt $b[$i]) { return -1 }
+            }
+            return 0
+        }
+        if ((Compare-Version $remoteVersion $ScriptVersion) -gt 0) {
+            Write-Host "WARNING: A newer version ($remoteVersion) is available on GitHub. You are running $ScriptVersion." -ForegroundColor Yellow
+            $update = Read-Host "Would you like to download and run the latest version now? (y/n)"
+            if ($update -eq 'y') {
+                $tempPath = Join-Path -Path ([System.IO.Path]::GetDirectoryName($localScriptPath)) -ChildPath 'exo-directsend-latest.ps1'
+                try {
+                    Invoke-WebRequest -Uri $githubRawUrl -OutFile $tempPath -UseBasicParsing
+                    Write-Host "Launching the latest version..." -ForegroundColor Green
+                    Start-Process pwsh -ArgumentList "-NoProfile", "-ExecutionPolicy Bypass", "-File", $tempPath
+                    exit
+                } catch {
+                    Write-Host "Failed to download or launch the latest version: $_" -ForegroundColor Red
+                    Read-Host "Press Enter to continue with the current version..."
+                }
+            } else {
                 Read-Host "Press Enter to continue with the current version..."
             }
-        } else {
-            Read-Host "Press Enter to continue with the current version..."
         }
     }
 } catch {
-    Write-Host "Could not check for script updates: $_" -ForegroundColor DarkYellow
+    Write-Host "Could not check for script updates: $_" -ForegroundColor Yellow
 }
 # --- End version check ---
 
