@@ -21,9 +21,9 @@
 #
 # .CREDITS
 #     Developed by Aaron Gruber. Inspired by Microsoft documentation and community best practices.
-#> Test
+#>
 
-$ScriptVersion = '1.0.4'
+$ScriptVersion = '1.0.2'
 
 # --- Version check: compare local script version to latest on GitHub ---
 # Use GitHub API to get the latest release tag
