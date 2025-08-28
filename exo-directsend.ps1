@@ -1,3 +1,5 @@
+# exo-directsend-auto.ps1
+
 # --- Version check: compare local script to latest on GitHub ---
 $githubRawUrl = 'https://raw.githubusercontent.com/gruberaaron/powershell/main/exo-directsend.ps1'
 $localScriptPath = $MyInvocation.MyCommand.Path
@@ -35,27 +37,6 @@ try {
 
 # Global variable to track connected tenant name
 $Global:TenantName = "Not connected to a tenant"
-# exo-directsend.ps1
-
-
-Import-Module ExchangeOnlineManagement -ErrorAction SilentlyContinue
-
-function Show-Menu {
-    Clear-Host
-    Write-Host "Exchange Online Direct Send Management" -ForegroundColor Cyan
-    Write-Host ""
-    Write-Host $Global:TenantName -ForegroundColor Yellow
-    Write-Host ""
-    Write-Host "1) Connect to Exchange Online"
-    Write-Host "2) Show 'rejectdirectsend' setting"
-    Write-Host "3) Disable direct send"
-    Write-Host "4) Send test message using direct send"
-    Write-Host "5) List inbound connectors"
-    Write-Host "6) Create new inbound connector"
-    Write-Host "7) Add inbound connector for KnowBe4"
-    Write-Host "8) Add inbound connector for Securence"
-    Write-Host "9) Disconnect and Exit"
-}
 
 function Connect-ExchangeOnlineSession {
     # Check if ExchangeOnlineManagement module is installed
@@ -86,6 +67,26 @@ function Connect-ExchangeOnlineSession {
         $Global:TenantName = "Not connected to a tenant"
         Write-Host "Failed to connect to Exchange Online: $_" -ForegroundColor Red
     }
+}
+
+# Automatically connect to Exchange Online at launch
+Connect-ExchangeOnlineSession
+
+function Show-Menu {
+    Clear-Host
+    Write-Host "Exchange Online Direct Send Management" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host $Global:TenantName -ForegroundColor Yellow
+    Write-Host ""
+    Write-Host "1) Connect to Exchange Online"
+    Write-Host "2) Show 'rejectdirectsend' setting"
+    Write-Host "3) Disable direct send"
+    Write-Host "4) Send test message using direct send"
+    Write-Host "5) List inbound connectors"
+    Write-Host "6) Create new inbound connector"
+    Write-Host "7) Add inbound connector for KnowBe4"
+    Write-Host "8) Add inbound connector for Securence"
+    Write-Host "9) Disconnect and Exit"
 }
 
 function Show-RejectDirectSend {
