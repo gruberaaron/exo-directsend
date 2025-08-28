@@ -1,3 +1,4 @@
+
 # exo-directsend.ps1
 # <#
 # .SYNOPSIS
@@ -6,6 +7,9 @@
 # .DESCRIPTION
 #     Provides a menu-driven interface for managing Exchange Online direct send settings and connectors.
 #     Includes auto-update/version check, auto-connect, and best-practice error handling.
+#
+# .VERSION
+#     1.0.0
 #
 # .AUTHOR
 #     Aaron Gruber
@@ -21,6 +25,8 @@
 # .CREDITS
 #     Developed by Aaron Gruber. Inspired by Microsoft documentation and community best practices.
 #>
+
+$ScriptVersion = '1.0.0'
 
 # --- Version check: compare local script to latest on GitHub ---
 $githubRawUrl = 'https://raw.githubusercontent.com/gruberaaron/powershell/main/exo-directsend.ps1'
@@ -96,7 +102,8 @@ Connect-ExchangeOnlineSession
 
 function Show-Menu {
     Clear-Host
-    Write-Host "Exchange Online Direct Send Management" -ForegroundColor Cyan
+    Write-Host "Exchange Online Direct Send Management " -NoNewline -ForegroundColor Cyan
+    Write-Host "(Version: $ScriptVersion)" -ForegroundColor DarkGray
     Write-Host ""
     Write-Host $Global:TenantName -ForegroundColor Yellow
     Write-Host ""
