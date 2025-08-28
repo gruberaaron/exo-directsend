@@ -23,7 +23,7 @@
 #     Developed by Aaron Gruber. Inspired by Microsoft documentation and community best practices.
 #> Test
 
-$ScriptVersion = '1.0.2'
+$ScriptVersion = '1.0.3'
 
 # --- Version check: compare local script version to latest on GitHub ---
 $githubRawUrl = 'https://raw.githubusercontent.com/gruberaaron/exo-directsend/main/exo-directsend.ps1'
