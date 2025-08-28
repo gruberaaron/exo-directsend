@@ -54,7 +54,7 @@ function Show-Menu {
     Write-Host "6) Create new inbound connector"
     Write-Host "7) Add inbound connector for KnowBe4"
     Write-Host "8) Add inbound connector for Securence"
-    Write-Host "9) Exit"
+    Write-Host "9) Disconnect and Exit"
 }
 
 function Connect-ExchangeOnlineSession {
