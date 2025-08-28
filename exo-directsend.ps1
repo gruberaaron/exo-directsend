@@ -130,7 +130,7 @@ function Send-TestDirectSend {
 
 function Show-InboundConnectors {
     Get-InboundConnector | Format-list -Property Name,Enabled,ConnectorType,SenderIPAddresses,`
-    RestrictDomainsToIPAddresses,RestrictDomainsToCertificate,RequireTls
+    TlsSenderCertificateName,RestrictDomainsToIPAddresses,RestrictDomainsToCertificate,RequireTls
     Pause
 }
 
@@ -221,5 +221,4 @@ do {
         '9' { Exit-Script }
         default { Write-Host "Invalid selection. Try again."; Pause }
     }
-}
-while ($true)
+} while ($true)
