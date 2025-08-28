@@ -3,10 +3,14 @@ $githubRawUrl = 'https://raw.githubusercontent.com/gruberaaron/powershell/main/e
 $localScriptPath = $MyInvocation.MyCommand.Path
 
 try {
-    $localHash = Get-FileHash -Path $localScriptPath -Algorithm SHA256
+    $localContent = Get-Content -Path $localScriptPath -Raw -Encoding UTF8
     $remoteContent = Invoke-WebRequest -Uri $githubRawUrl -UseBasicParsing | Select-Object -ExpandProperty Content
-    $remoteHash = [System.BitConverter]::ToString((New-Object -TypeName System.Security.Cryptography.SHA256Managed).ComputeHash([System.Text.Encoding]::UTF8.GetBytes($remoteContent))).Replace('-','').ToLower()
-    if ($localHash.Hash.ToLower() -ne $remoteHash) {
+    # Normalize line endings to LF and trim trailing whitespace
+    $localContentNorm = ($localContent -replace '\r\n?', "`n") -replace '\s+$',''
+    $remoteContentNorm = ($remoteContent -replace '\r\n?', "`n") -replace '\s+$',''
+    $localHash = [System.BitConverter]::ToString((New-Object -TypeName System.Security.Cryptography.SHA256Managed).ComputeHash([System.Text.Encoding]::UTF8.GetBytes($localContentNorm))).Replace('-','').ToLower()
+    $remoteHash = [System.BitConverter]::ToString((New-Object -TypeName System.Security.Cryptography.SHA256Managed).ComputeHash([System.Text.Encoding]::UTF8.GetBytes($remoteContentNorm))).Replace('-','').ToLower()
+    if ($localHash -ne $remoteHash) {
         Write-Host "WARNING: This script is not the latest version from GitHub." -ForegroundColor Yellow
         $update = Read-Host "Would you like to download and run the latest version now? (y/n)"
         if ($update -eq 'y') {
