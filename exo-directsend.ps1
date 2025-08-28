@@ -1,4 +1,26 @@
-# exo-directsend-auto.ps1
+# exo-directsend.ps1
+# <#
+# .SYNOPSIS
+#     Exchange Online Direct Send Management Script
+#
+# .DESCRIPTION
+#     Provides a menu-driven interface for managing Exchange Online direct send settings and connectors.
+#     Includes auto-update/version check, auto-connect, and best-practice error handling.
+#
+# .AUTHOR
+#     Aaron Gruber
+#
+# .LICENSE
+#     BSD 3-Clause License (see LICENSE file)
+#
+# .NOTES
+#     - Requires PowerShell 5.1+ and ExchangeOnlineManagement module.
+#     - No admin rights required for module install (uses -Scope CurrentUser).
+#     - For feedback or contributions, visit: https://github.com/gruberaaron/powershell
+#
+# .CREDITS
+#     Developed by Aaron Gruber. Inspired by Microsoft documentation and community best practices.
+#>
 
 # --- Version check: compare local script to latest on GitHub ---
 $githubRawUrl = 'https://raw.githubusercontent.com/gruberaaron/powershell/main/exo-directsend.ps1'
