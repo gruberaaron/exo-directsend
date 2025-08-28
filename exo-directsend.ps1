@@ -28,6 +28,7 @@ try {
     Write-Host "Could not check for script updates: $_" -ForegroundColor DarkYellow
 }
 # --- End version check ---
+
 # Global variable to track connected tenant name
 $Global:TenantName = "Not connected to a tenant"
 # exo-directsend.ps1
