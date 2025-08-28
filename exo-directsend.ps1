@@ -1,3 +1,22 @@
+# --- Version check: compare local script to latest on GitHub ---
+$githubRawUrl = 'https://raw.githubusercontent.com/gruberaaron/powershell/main/exo-directsend.ps1'
+$localScriptPath = $MyInvocation.MyCommand.Path
+
+try {
+    $localHash = Get-FileHash -Path $localScriptPath -Algorithm SHA256
+    $remoteContent = Invoke-WebRequest -Uri $githubRawUrl -UseBasicParsing | Select-Object -ExpandProperty Content
+    $remoteHash = [System.BitConverter]::ToString((New-Object -TypeName System.Security.Cryptography.SHA256Managed).ComputeHash([System.Text.Encoding]::UTF8.GetBytes($remoteContent))).Replace('-','').ToLower()
+    if ($localHash.Hash.ToLower() -ne $remoteHash) {
+        Write-Host "WARNING: This script is not the latest version from GitHub." -ForegroundColor Yellow
+        Write-Host "Please download the latest version from:" -ForegroundColor Yellow
+        Write-Host $githubRawUrl -ForegroundColor Yellow
+    }
+} catch {
+    Write-Host "Could not check for script updates: $_" -ForegroundColor DarkYellow
+}
+# --- End version check ---
+# Global variable to track connected tenant name
+$Global:TenantName = "Not connected to a tenant"
 # exo-directsend.ps1
 
 
@@ -6,6 +25,9 @@ Import-Module ExchangeOnlineManagement -ErrorAction SilentlyContinue
 function Show-Menu {
     Clear-Host
     Write-Host "Exchange Online Direct Send Management" -ForegroundColor Cyan
+    Write-Host ""
+    Write-Host $Global:TenantName -ForegroundColor Yellow
+    Write-Host ""
     Write-Host "1) Connect to Exchange Online"
     Write-Host "2) Show 'rejectdirectsend' setting"
     Write-Host "3) Disable direct send"
@@ -39,8 +61,11 @@ function Connect-ExchangeOnlineSession {
     try {
         Import-Module ExchangeOnlineManagement -ErrorAction Stop
         Connect-ExchangeOnline 6>$null
+        $org = Get-OrganizationConfig
+        $Global:TenantName = "Connected to tenant: $($org.Name)"
         Write-Host "Connected to Exchange Online."
     } catch {
+        $Global:TenantName = "Not connected to a tenant"
         Write-Host "Failed to connect to Exchange Online: $_" -ForegroundColor Red
     }
 }
@@ -151,6 +176,17 @@ function Add-SecurenceConnector {
     Pause
 }
 
+function Exit-Script {
+    try {
+        Disconnect-ExchangeOnline -Confirm:$false
+    } catch {
+        # Ignore errors if not connected
+    }
+    $Global:TenantName = "Not connected to a tenant"
+    Write-Host "Exiting..."
+    exit
+}
+
 do {
     Show-Menu
     $choice = Read-Host "Select an option"
@@ -163,7 +199,7 @@ do {
         '6' { New-Connector }
         '7' { Add-KnowBe4Connector }
         '8' { Add-SecurenceConnector }
-        '9' { Write-Host "Exiting..."; exit }
+        '9' { Exit-Script }
         default { Write-Host "Invalid selection. Try again."; Pause }
     }
 } while ($true)
