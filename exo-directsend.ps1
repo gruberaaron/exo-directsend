@@ -8,8 +8,21 @@ try {
     $remoteHash = [System.BitConverter]::ToString((New-Object -TypeName System.Security.Cryptography.SHA256Managed).ComputeHash([System.Text.Encoding]::UTF8.GetBytes($remoteContent))).Replace('-','').ToLower()
     if ($localHash.Hash.ToLower() -ne $remoteHash) {
         Write-Host "WARNING: This script is not the latest version from GitHub." -ForegroundColor Yellow
-        Write-Host "Please download the latest version from:" -ForegroundColor Yellow
-        Write-Host $githubRawUrl -ForegroundColor Yellow
+        $update = Read-Host "Would you like to download and run the latest version now? (y/n)"
+        if ($update -eq 'y') {
+            $tempPath = Join-Path -Path ([System.IO.Path]::GetDirectoryName($localScriptPath)) -ChildPath 'exo-directsend-latest.ps1'
+            try {
+                Invoke-WebRequest -Uri $githubRawUrl -OutFile $tempPath -UseBasicParsing
+                Write-Host "Launching the latest version..." -ForegroundColor Green
+                Start-Process pwsh -ArgumentList "-NoProfile", "-ExecutionPolicy Bypass", "-File", $tempPath
+                exit
+            } catch {
+                Write-Host "Failed to download or launch the latest version: $_" -ForegroundColor Red
+                Read-Host "Press Enter to continue with the current version..."
+            }
+        } else {
+            Read-Host "Press Enter to continue with the current version..."
+        }
     }
 } catch {
     Write-Host "Could not check for script updates: $_" -ForegroundColor DarkYellow
