@@ -64,8 +64,14 @@ try {
             Read-Host "Press Enter to continue with the current version..."
         }
     }
+# If any error occurs during version check, prompt user to continue
 } catch {
     Write-Host "Could not check for script updates: $_" -ForegroundColor Yellow
+    if ($_.Exception.Response) {
+        Write-Host ("Status Code: {0}" -f $_.Exception.Response.StatusCode.value__)
+    }
+    Write-Host ("Exception Message: {0}" -f $_.Exception.Message)
+    Read-Host "Press Enter to continue with the current version..."
 }
 # --- End version check ---
 
