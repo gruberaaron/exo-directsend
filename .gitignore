@@ -1,0 +1,26 @@
+# VS Code settings
+.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs and temp files
+*.log
+*.tmp
+
+# Python cache (if ever used)
+__pycache__/
+
+# Node modules (if ever used)
+node_modules/
+
+# Environment/secret files
+.env
+*.secret
+
+# PowerShell history
+*.pshistory
+
+# Ignore release-please temp branches (not needed, but for reference)
+# release-please--branches--*
