@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.5](https://github.com/gruberaaron/exo-directsend/compare/v1.0.4...v1.0.5) (2025-08-29)
+
+
+### Bug Fixes
+
+* **changelog:** correct bug fix section headers and remove outdated entries ([f66b17a](https://github.com/gruberaaron/exo-directsend/commit/f66b17a8924387eaf79d3d0122108957103cf966))
+
 ## [1.0.4](https://github.com/gruberaaron/exo-directsend/compare/v1.0.3...v1.0.4) (2025-08-29)
 
 ### Bug Fixes (1.0.4)
