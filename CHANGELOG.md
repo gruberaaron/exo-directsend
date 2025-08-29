@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.0.3](https://github.com/gruberaaron/exo-directsend/compare/v1.0.2...v1.0.3) (2025-08-29)
+
+
+### Bug Fixes
+
+* enhance error handling during version check ([19414e8](https://github.com/gruberaaron/exo-directsend/commit/19414e81fe4b488190d2eee7d2a1ca2ecdae6013))
+
 ## [1.0.2](https://github.com/gruberaaron/exo-directsend/compare/v1.0.1...v1.0.2) (2025-08-28)
 
 
