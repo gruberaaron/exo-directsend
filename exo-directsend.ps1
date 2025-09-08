@@ -23,7 +23,7 @@
 #     Developed by Aaron Gruber. Inspired by Microsoft documentation and community best practices.
 #>
 
-$ScriptVersion = '1.0.5'
+$ScriptVersion = '1.0.6'
 
 # --- Version check: compare local script version to latest on GitHub ---
 # Use GitHub API to get the latest release tag
@@ -127,7 +127,8 @@ function Show-Menu {
     Write-Host "6) Create new inbound connector"
     Write-Host "7) Add inbound connector for KnowBe4"
     Write-Host "8) Add inbound connector for Securence"
-    Write-Host "9) Disconnect and Exit"
+    Write-Host "9) Add inbound connector for Zix"
+    Write-Host "10) Disconnect and Exit"
 }
 
 function Show-RejectDirectSend {
@@ -220,6 +221,7 @@ function Add-KnowBe4Connector {
     Pause
 }
 
+
 function Add-SecurenceConnector {
     $name = "Securence Inbound"
     $subnet = "216.17.3.0/24"
@@ -233,6 +235,23 @@ function Add-SecurenceConnector {
         Write-Host "Securence inbound connector created."
     } catch {
         Write-Host "Failed to create Securence inbound connector: $_" -ForegroundColor Red
+    }
+    Pause
+}
+
+function Add-ZixConnector {
+    $name = "Zix Inbound"
+    $subnets = @("63.71.13.0/24","63.71.14.0/24","63.71.15.0/24","199.30.236.0/24","91.209.6.0/24")
+    try {
+        New-InboundConnector -Name $name `
+            -ConnectorType Partner `
+            -SenderIPAddresses $subnets `
+            -SenderDomains '*' `
+            -RequireTls $true `
+            -Enabled $true | Out-Null
+        Write-Host "Zix inbound connector created."
+    } catch {
+        Write-Host "Failed to create Zix inbound connector: $_" -ForegroundColor Red
     }
     Pause
 }
@@ -260,7 +279,8 @@ do {
         '6' { New-Connector }
         '7' { Add-KnowBe4Connector }
         '8' { Add-SecurenceConnector }
-        '9' { Exit-Script }
+        '9' { Add-ZixConnector }
+        '10' { Exit-Script }
         default { Write-Host "Invalid selection. Try again."; Pause }
     }
 } while ($true)
