@@ -23,7 +23,7 @@
 #     Developed by Aaron Gruber. Inspired by Microsoft documentation and community best practices.
 #>
 
-$ScriptVersion = '1.0.6'
+$ScriptVersion = '1.1.0'
 
 # --- Version check: compare local script version to latest on GitHub ---
 # Use GitHub API to get the latest release tag
