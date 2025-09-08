@@ -10,9 +10,10 @@ An interactive, menu-driven PowerShell script for managing direct send operation
 - User-friendly and suitable for manual administration
 - Customizable and extendable PowerShell script
 
+
 ## Prerequisites
 
-- Windows PowerShell 5.1 or PowerShell Core
+- PowerShell 7 or higher (**required**)
 - Exchange Online account with appropriate permissions
 - Internet connectivity
 
@@ -29,10 +30,13 @@ An interactive, menu-driven PowerShell script for managing direct send operation
    - Open `exo-directsend.ps1` in your preferred editor.
    - Update any configuration variables as needed.
 
+
 3. **Run the script:**
 
+   > **Note:** This script requires PowerShell 7 or higher. If you are using Windows PowerShell 5.1, you must [install PowerShell 7](https://github.com/PowerShell/PowerShell/releases/latest) and run the script using `pwsh`.
+
    ```powershell
-   .\exo-directsend.ps1
+   pwsh .\exo-directsend.ps1
    ```
 
 ## Usage

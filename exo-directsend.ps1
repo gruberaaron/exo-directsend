@@ -1,4 +1,3 @@
-
 # exo-directsend.ps1
 # <#
 # .SYNOPSIS
@@ -7,6 +6,8 @@
 # .DESCRIPTION
 #     Provides a menu-driven interface for managing Exchange Online direct send settings and connectors.
 #     Includes auto-update/version check, auto-connect, and best-practice error handling.
+#     
+#     *** Requires PowerShell 7 or higher. ***
 #
 # .AUTHOR
 #     Aaron Gruber
@@ -15,7 +16,7 @@
 #     BSD 3-Clause License (see LICENSE file)
 #
 # .NOTES
-#     - Requires PowerShell 5.1+ and ExchangeOnlineManagement module.
+#     - Requires PowerShell 7+ and ExchangeOnlineManagement module.
 #     - No admin rights required for module install (uses -Scope CurrentUser).
 #     - For feedback or contributions, visit: https://github.com/gruberaaron/exo-directsend
 #
@@ -23,7 +24,22 @@
 #     Developed by Aaron Gruber. Inspired by Microsoft documentation and community best practices.
 #>
 
-$ScriptVersion = '1.1.0'
+$ScriptVersion = '2.0.0'
+
+# --- PowerShell 7+ Verification ---
+if ($PSVersionTable.PSVersion.Major -lt 7) {
+    Write-Host "ERROR: This script requires PowerShell 7 or higher." -ForegroundColor Red
+    $install = Read-Host "Would you like to download and install PowerShell 7 now? (y/n)"
+    if ($install -eq 'y') {
+        $url = "https://github.com/PowerShell/PowerShell/releases/latest"
+        Write-Host "Opening download page in your browser..." -ForegroundColor Cyan
+        Start-Process $url
+        Write-Host "After installing PowerShell 7, re-run this script using 'pwsh'." -ForegroundColor Yellow
+    } else {
+        Write-Host "Exiting script. PowerShell 7 is required." -ForegroundColor Red
+    }
+    exit
+}
 
 # --- Version check: compare local script version to latest on GitHub ---
 # Use GitHub API to get the latest release tag
