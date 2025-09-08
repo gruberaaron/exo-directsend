@@ -1,5 +1,16 @@
 # Changelog
 
+## [2.0.0](https://github.com/gruberaaron/exo-directsend/compare/v1.1.0...v2.0.0) (2025-09-08)
+
+
+### ⚠ BREAKING CHANGES
+
+* require PowerShell 7 or higher and update documentation
+
+### Features
+
+* require PowerShell 7 or higher and update documentation ([887bc67](https://github.com/gruberaaron/exo-directsend/commit/887bc679e54c9ca3799abd3a8034ccd58d8a716f))
+
 ## [1.1.0](https://github.com/gruberaaron/exo-directsend/compare/v1.0.5...v1.1.0) (2025-09-08)
 
 
