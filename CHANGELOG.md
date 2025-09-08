@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.1.0](https://github.com/gruberaaron/exo-directsend/compare/v1.0.5...v1.1.0) (2025-09-08)
+
+
+### Features
+
+* add menu option and function to create inbound connector for Zix ([8d18b67](https://github.com/gruberaaron/exo-directsend/commit/8d18b67662625386185629c36dab3c6a563a3f7e))
+
 ## [1.0.5](https://github.com/gruberaaron/exo-directsend/compare/v1.0.4...v1.0.5) (2025-08-29)
 
 
