@@ -24,7 +24,7 @@
 #     Developed by Aaron Gruber. Inspired by Microsoft documentation and community best practices.
 #>
 
-$ScriptVersion = '2.0.0'
+$ScriptVersion = '2.1.0'
 
 # --- PowerShell 7+ Verification ---
 if ($PSVersionTable.PSVersion.Major -lt 7) {
@@ -138,13 +138,14 @@ function Show-Menu {
     Write-Host "1) Connect to Exchange Online"
     Write-Host "2) Show 'rejectdirectsend' setting"
     Write-Host "3) Disable direct send"
-    Write-Host "4) Send test message using direct send"
-    Write-Host "5) List inbound connectors"
-    Write-Host "6) Create new inbound connector"
-    Write-Host "7) Add inbound connector for KnowBe4"
-    Write-Host "8) Add inbound connector for Securence"
-    Write-Host "9) Add inbound connector for Zix"
-    Write-Host "10) Disconnect and Exit"
+    Write-Host "4) Enable direct send"
+    Write-Host "5) Send test message using direct send"
+    Write-Host "6) List inbound connectors"
+    Write-Host "7) Create new inbound connector"
+    Write-Host "8) Add inbound connector for KnowBe4"
+    Write-Host "9) Add inbound connector for Securence"
+    Write-Host "10) Add inbound connector for Zix"
+    Write-Host "11) Disconnect and Exit"
 }
 
 function Show-RejectDirectSend {
@@ -160,6 +161,21 @@ function Disable-DirectSend {
             Write-Host "Direct send has been disabled."
         } catch {
             Write-Host "Failed to disable direct send: $_" -ForegroundColor Red
+        }
+    } else {
+        Write-Host "Operation cancelled."
+    }
+    Pause
+}
+
+function Enable-DirectSend {
+    $confirm = Read-Host "Are you sure you want to enable direct send? (y/n)"
+    if ($confirm -eq 'y') {
+        try {
+            Set-OrganizationConfig -RejectDirectSend $false
+            Write-Host "Direct send has been enabled."
+        } catch {
+            Write-Host "Failed to enable direct send: $_" -ForegroundColor Red
         }
     } else {
         Write-Host "Operation cancelled."
@@ -257,7 +273,7 @@ function Add-SecurenceConnector {
 
 function Add-ZixConnector {
     $name = "Zix Inbound"
-    $subnets = @("63.71.13.0/24","63.71.14.0/24","63.71.15.0/24","199.30.236.0/24","91.209.6.0/24")
+    $subnets = @("63.71.13.0/24","63.71.14.0/24","63.71.15.0/24","199.30.236.0/24","91.209.6.0/24","208.70.135.0/24","63.71.8.100-63.71.8.109")
     try {
         New-InboundConnector -Name $name `
             -ConnectorType Partner `
@@ -290,13 +306,14 @@ do {
         '1' { Connect-ExchangeOnlineSession }
         '2' { Show-RejectDirectSend }
         '3' { Disable-DirectSend }
-        '4' { Send-TestDirectSend }
-        '5' { Show-InboundConnectors }
-        '6' { New-Connector }
-        '7' { Add-KnowBe4Connector }
-        '8' { Add-SecurenceConnector }
-        '9' { Add-ZixConnector }
-        '10' { Exit-Script }
+        '4' { Enable-DirectSend }
+        '5' { Send-TestDirectSend }
+        '6' { Show-InboundConnectors }
+        '7' { New-Connector }
+        '8' { Add-KnowBe4Connector }
+        '9' { Add-SecurenceConnector }
+        '10' { Add-ZixConnector }
+        '11' { Exit-Script }
         default { Write-Host "Invalid selection. Try again."; Pause }
     }
 } while ($true)
