@@ -24,7 +24,7 @@
 #     Developed by Aaron Gruber. Inspired by Microsoft documentation and community best practices.
 #>
 
-$ScriptVersion = '2.1.0'
+$ScriptVersion = '2.1.1'
 
 # --- PowerShell 7+ Verification ---
 if ($PSVersionTable.PSVersion.Major -lt 7) {
@@ -273,7 +273,8 @@ function Add-SecurenceConnector {
 
 function Add-ZixConnector {
     $name = "Zix Inbound"
-    $subnets = @("63.71.13.0/24","63.71.14.0/24","63.71.15.0/24","199.30.236.0/24","91.209.6.0/24","208.70.135.0/24","63.71.8.100-63.71.8.109")
+    $subnets = @("63.71.13.0/24","63.71.14.0/24","63.71.15.0/24","199.30.236.0/24","91.209.6.0/24",
+                "208.70.135.0/24","63.71.8.100/30","63.71.8.104/30","63.71.8.108/31")
     try {
         New-InboundConnector -Name $name `
             -ConnectorType Partner `
