@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.0](https://github.com/gruberaaron/exo-directsend/compare/v2.0.0...v2.1.0) (2025-10-10)
+
+
+### Features
+
+* add direct send enable functionality and update Zix connector IPs ([e743495](https://github.com/gruberaaron/exo-directsend/commit/e743495f379114bd5fd7a2ac661a88298afe9985))
+
 ## [2.0.0](https://github.com/gruberaaron/exo-directsend/compare/v1.1.0...v2.0.0) (2025-09-08)
 
 
