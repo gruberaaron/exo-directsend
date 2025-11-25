@@ -1,5 +1,14 @@
 # Changelog
 
+## [2.1.2](https://github.com/nci-aarongruber/exo-directsend/compare/v2.1.1...v2.1.2) (2025-11-25)
+
+
+### Bug Fixes
+
+* add explicit token parameter to release-please action ([a886e25](https://github.com/nci-aarongruber/exo-directsend/commit/a886e25212aacdd27b6c8e3ad1c71246a5660b90))
+* correct release-please action reference in workflow ([c6e88d8](https://github.com/nci-aarongruber/exo-directsend/commit/c6e88d8a6f10af8a33768a1759321954ba3d43f1))
+* use PAT for release-please to resolve permissions error ([8b35679](https://github.com/nci-aarongruber/exo-directsend/commit/8b356791d5cdc983aedb3476c7ffba932e230f0c))
+
 ## [2.1.1](https://github.com/gruberaaron/exo-directsend/compare/v2.1.0...v2.1.1) (2025-10-10)
 
 
