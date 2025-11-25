@@ -1,5 +1,12 @@
 # Changelog
 
+## [2.1.1](https://github.com/gruberaaron/exo-directsend/compare/v2.1.0...v2.1.1) (2025-10-10)
+
+
+### Bug Fixes
+
+* Corrected invalid IP range for Zix. ([710493c](https://github.com/gruberaaron/exo-directsend/commit/710493cda409cd854adf731138a055417fb4c364))
+
 ## [2.1.0](https://github.com/gruberaaron/exo-directsend/compare/v2.0.0...v2.1.0) (2025-10-10)
 
 
