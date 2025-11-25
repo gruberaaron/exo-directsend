@@ -22,7 +22,7 @@ An interactive, menu-driven PowerShell script for managing direct send operation
 1. **Clone the repository:**
 
    ```powershell
-   git clone https://github.com/gruberaaron/exo-directsend.git
+   git clone https://github.com/nci-aarongruber/exo-directsend.git
    cd exo-directsend
    ```
 

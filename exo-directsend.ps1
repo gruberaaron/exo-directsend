@@ -18,7 +18,7 @@
 # .NOTES
 #     - Requires PowerShell 7+ and ExchangeOnlineManagement module.
 #     - No admin rights required for module install (uses -Scope CurrentUser).
-#     - For feedback or contributions, visit: https://github.com/gruberaaron/exo-directsend
+#     - For feedback or contributions, visit: https://github.com/nci-aarongruber/exo-directsend
 #
 # .CREDITS
 #     Developed by Aaron Gruber. Inspired by Microsoft documentation and community best practices.
@@ -43,7 +43,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 
 # --- Version check: compare local script version to latest on GitHub ---
 # Use GitHub API to get the latest release tag
-$githubApiUrl = 'https://api.github.com/repos/gruberaaron/exo-directsend/releases/latest'
+$githubApiUrl = 'https://api.github.com/repos/nci-aarongruber/exo-directsend/releases/latest'
 $localScriptPath = $MyInvocation.MyCommand.Path
 
 try {
@@ -65,7 +65,7 @@ try {
         Write-Host "WARNING: A newer version ($latestTag) is available on GitHub. You are running $ScriptVersion." -ForegroundColor Yellow
         $update = Read-Host "Would you like to download and run the latest version now? (y/n)"
         if ($update -eq 'y') {
-            $downloadUrl = "https://raw.githubusercontent.com/gruberaaron/exo-directsend/main/exo-directsend.ps1"
+            $downloadUrl = "https://raw.githubusercontent.com/nci-aarongruber/exo-directsend/main/exo-directsend.ps1"
             $tempPath = Join-Path -Path ([System.IO.Path]::GetDirectoryName($localScriptPath)) -ChildPath 'exo-directsend-latest.ps1'
             try {
                 Invoke-WebRequest -Uri $downloadUrl -OutFile $tempPath -UseBasicParsing
